@@ -21,7 +21,7 @@ export function AppRoutes() {
 		if (window.electron.platform === "win32") {
 			toast.loading("Downloading update. Your app will restart soon.")
 		} else {
-			toast("Update is available for download at xai.games/sentrynodes");
+			toast.success("Update is available for download at xai.games/sentrynodes", {duration: 10000});
 		}
 	});
 
