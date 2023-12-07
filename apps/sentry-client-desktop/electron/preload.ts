@@ -1,5 +1,4 @@
 import {contextBridge, ipcRenderer} from 'electron';
-import os from 'os';
 // import {useSetAtom} from "jotai";
 // import {assignedWalletModalAtom} from "../src/components/DeepLinkManager";
 
@@ -10,7 +9,7 @@ contextBridge.exposeInMainWorld(
 	'electron',
 	{
 		openExternal: (url: string) => ipcRenderer.send('open-external', url),
-		platform: os.platform(),
+		platform: process.platform,
 	}
 );
 
