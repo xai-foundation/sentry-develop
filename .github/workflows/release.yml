@@ -102,7 +102,7 @@ jobs:
           username: ${{ secrets.SSL_USERNAME }}
           password: ${{ secrets.SSL_PASSWORD }}
           totp_secret: ${{ secrets.SSL_TOTP_SECRET }}
-          file_path: release-cli/sentry-node-cli-windows.exe
+          file_path: release-cli/sentry-node-cli-win.exe
           output_path: signed_builds
 
 #      - name: Generate checksum
