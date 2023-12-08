@@ -85,6 +85,9 @@ jobs:
         shell: bash
         run: mkdir signed_builds
 
+      - name: log the files
+        run: ls -l /home/runner/work/sentry-develop/sentry-develop/release-cli
+
       - name: Sign build Windows exe
         uses: sslcom/actions-codesigner@develop
         with:
@@ -113,9 +116,6 @@ jobs:
 #          cat /home/runner/work/sentry-develop/sentry-develop/release-sentry-client-desktop-windows-latest/latest.yml
 #          sed -i '' -e "s#^sha512:.*#sha512: \"$CHECKSUM\"#" "/home/runner/work/sentry-develop/sentry-develop/release-sentry-client-desktop-windows-latest/latest.yml"
 #          sed -i '' -e "s#^    sha512:.*#    sha512: \"$CHECKSUM\"#" "/home/runner/work/sentry-develop/sentry-develop/release-sentry-client-desktop-windows-latest/latest.yml"
-
-      - name: log the files
-        run: ls -l /home/runner/work/sentry-develop/sentry-develop/release-cli
 
       - name: Release
         uses: softprops/action-gh-release@v1
