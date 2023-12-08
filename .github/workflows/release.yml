@@ -74,7 +74,7 @@ jobs:
 
   sign-and-release:
     needs: build
-    runs-on: mac-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Download artifacts
@@ -93,6 +93,13 @@ jobs:
           totp_secret: ${{ secrets.SSL_TOTP_SECRET }}
           file_path: release-sentry-client-desktop-windows-latest/sentry-client-windows.exe
           output_path: release-sentry-client-desktop-windows-latest/signed_builds
+
+      - name: Generate signed checksum
+        run: |
+          # CHECKSUM=$(shasum -a 512 release-sentry-client-desktop-windows-latest/signed_builds/sentry-client-windows.exe | cut -f1 -d\\ | xxd -r -p | base64)
+          CHECKSUM=$(sha512sum release-sentry-client-desktop-windows-latest/signed_builds/sentry-client-windows.exe | cut -f1 -d\ | xxd -r -p | base64)
+          echo "SHA512 Checksum: $CHECKSUM"
+          sed -i "s/^sha512:.*/sha512: $CHECKSUM/" release-sentry-client-desktop-windows-latest/latest.yml
 
       - name: Release
         uses: softprops/action-gh-release@v1
