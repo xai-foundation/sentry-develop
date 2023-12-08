@@ -96,10 +96,9 @@ jobs:
 
       - name: Generate signed checksum
         run: |
-          # CHECKSUM=$(shasum -a 512 release-sentry-client-desktop-windows-latest/signed_builds/sentry-client-windows.exe | cut -f1 -d\\ | xxd -r -p | base64)
           CHECKSUM=$(sha512sum release-sentry-client-desktop-windows-latest/signed_builds/sentry-client-windows.exe | cut -f1 -d\ | xxd -r -p | base64)
           echo "SHA512 Checksum: $CHECKSUM"
-          
+
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
