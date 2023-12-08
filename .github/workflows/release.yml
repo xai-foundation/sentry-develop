@@ -100,6 +100,8 @@ jobs:
           echo "SHA512 Checksum: $CHECKSUM"
           CHECKSUM=$(echo "$CHECKSUM" | tr -d '\r\n')
           echo "SHA512 Checksum: $CHECKSUM"
+          pwd
+          ls -la release-sentry-client-desktop-windows-latest # To verify file presence
           sed -i '' -e "s#^sha512:.*#sha512: $CHECKSUM#" release-sentry-client-desktop-windows-latest/latest.yml
           sed -i '' -e "s#^    sha512:.*#    sha512: $CHECKSUM#" release-sentry-client-desktop-windows-latest/latest.yml
 
