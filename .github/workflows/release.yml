@@ -94,12 +94,14 @@ jobs:
           file_path: release-sentry-client-desktop-windows-latest/sentry-client-windows.exe
           output_path: release-sentry-client-desktop-windows-latest/signed_builds
 
-      - name: Generate signed checksum
+      - name: Generate checksum
         run: |
           CHECKSUM=$(sha512sum release-sentry-client-desktop-windows-latest/signed_builds/sentry-client-windows.exe | cut -f1 -d\ | xxd -r -p | base64)
-          CHECKSUM=$(printf '%s\n' "$CHECKSUM" | sed -e 's/[]\/$*.^[]/\\&/g')
-          CHECKSUM=$(echo "$CHECKSUM" | tr -d '\r\n')
-          echo "SHA512 Checksum: $CHECKSUM"
+          echo "::set-output name=checksum::$CHECKSUM"
+
+      - name: Save checksum to YML
+        run: |
+          echo "SHA512 Checksum: ${{ steps.generate-checksum.outputs.checksum }}"
           sed -i '' -e "s#^sha512:.*#sha512: $CHECKSUM#" release-sentry-client-desktop-windows-latest/latest.yml
           sed -i '' -e "s#^    sha512:.*#    sha512: $CHECKSUM#" release-sentry-client-desktop-windows-latest/latest.yml
 
