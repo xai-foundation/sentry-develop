@@ -9,7 +9,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -41,14 +41,6 @@ jobs:
           name: release-sentry-client-desktop-${{ matrix.os }}
           path: apps/sentry-client-desktop/release
 
-#      - name: zip cli artifacts
-#        run: |
-#          cd apps/cli/release
-#          zip sentry-node-cli-macos.zip sentry-node-cli-macos
-#          zip sentry-node-cli-linux.zip sentry-node-cli-linux
-#          zip sentry-node-cli-windows.zip sentry-node-cli-win.exe
-#        if: matrix.os == 'ubuntu-latest'
-
       - name: Upload cli artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -57,7 +49,7 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
 
           # Popular action to deploy to GitHub Pages:
-          # Docs: https://github.com/peaceiris/actions-gh-pages#%EF%B8%8F-docusaurus
+        # Docs: https://github.com/peaceiris/actions-gh-pages#%EF%B8%8F-docusaurus
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
@@ -104,15 +96,6 @@ jobs:
           totp_secret: ${{ secrets.SSL_TOTP_SECRET }}
           file_path: release-cli/sentry-node-cli-win.exe
           output_path: signed_builds
-
-#      - name: Generate checksum
-#        run: |
-#          CHECKSUM=$(sha512sum release-sentry-client-desktop-windows-latest/signed_builds/sentry-client-windows.exe | cut -f1 -d\ | xxd -r -p | base64)
-#          CHECKSUM=$(echo "$CHECKSUM" | tr -d '\r\n')
-#          echo "SHA512 Checksum: $CHECKSUM"
-#          cat /home/runner/work/sentry-develop/sentry-develop/release-sentry-client-desktop-windows-latest/latest.yml
-#          sed -i '' -e "s#^sha512:.*#sha512: \"$CHECKSUM\"#" "/home/runner/work/sentry-develop/sentry-develop/release-sentry-client-desktop-windows-latest/latest.yml"
-#          sed -i '' -e "s#^    sha512:.*#    sha512: \"$CHECKSUM\"#" "/home/runner/work/sentry-develop/sentry-develop/release-sentry-client-desktop-windows-latest/latest.yml"
 
       - name: Release
         uses: softprops/action-gh-release@v1
