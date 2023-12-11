@@ -51,7 +51,7 @@ jobs:
 
       - name: Create directory for signed builds
         shell: bash
-        run: mkdir signed_builds
+        run: mkdir signed-builds
 
       - name: Sign build Windows exe
         uses: sslcom/actions-codesigner@develop
@@ -61,7 +61,7 @@ jobs:
           password: ${{ secrets.SSL_PASSWORD }}
           totp_secret: ${{ secrets.SSL_TOTP_SECRET }}
           file_path: release-windows-latest/sentry-client-windows.exe
-          output_path: signed_builds
+          output_path: signed-builds
       
       - name: Upload signed artifacts
         uses: actions/upload-artifact@v2
