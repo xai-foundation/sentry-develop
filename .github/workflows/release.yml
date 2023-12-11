@@ -85,7 +85,7 @@ jobs:
 
       - name: Create directory for signed builds
         shell: bash
-        run: mkdir signed-builds
+        run: mkdir release-desktop-windows-latest/signed-builds
 
       - name: Sign build Windows exe
         uses: sslcom/actions-codesigner@develop
