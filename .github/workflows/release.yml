@@ -38,7 +38,7 @@ jobs:
           name: release-sentry-client-desktop-windows-latest
           path: apps/sentry-client-desktop/release
 
-  sign-and-release:
+  sign:
     needs: build
     runs-on: ubuntu-latest
 
@@ -59,22 +59,37 @@ jobs:
           totp_secret: ${{ secrets.SSL_TOTP_SECRET }}
           file_path: release-sentry-client-desktop-windows-latest/sentry-client-windows.exe
           output_path: signed_builds
+      
+      - name: Upload signed artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: release-signed-sentry-client-desktop-windows-latest
+          path: release-sentry-client-desktop-windows-latest
+
+  checksum-and-release:
+    needs: build
+    runs-on: mac-latest
+
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
 
       - name: Generate checksum
         run: |
-          CHECKSUM=$(sha512sum release-sentry-client-desktop-windows-latest/signed_builds/sentry-client-windows.exe | cut -f1 -d\ | xxd -r -p | base64)
+          CHECKSUM=$(shasum -a 512 release-signed-sentry-client-desktop-windows-latest/signed_builds/sentry-client-windows.exe | cut -f1 -d\\ | xxd -r -p | base64)
           CHECKSUM=$(echo "$CHECKSUM" | tr -d '\r\n')
           echo "SHA512 Checksum: $CHECKSUM"
-          cat /home/runner/work/sentry-develop/sentry-develop/release-sentry-client-desktop-windows-latest/latest.yml
-          sed -i '' -e "s#^sha512:.*#sha512: \"$CHECKSUM\"#" "/home/runner/work/sentry-develop/sentry-develop/release-sentry-client-desktop-windows-latest/latest.yml"
-          sed -i '' -e "s#^    sha512:.*#    sha512: \"$CHECKSUM\"#" "/home/runner/work/sentry-develop/sentry-develop/release-sentry-client-desktop-windows-latest/latest.yml"
+          cat /home/runner/work/sentry-develop/sentry-develop/release-signed-sentry-client-desktop-windows-latest/latest.yml
+          sed -i '' -e "s#^sha512:.*#sha512: $CHECKSUM#" "/home/runner/work/sentry-develop/sentry-develop/release-signed-sentry-client-desktop-windows-latest/latest.yml"
+          sed -i '' -e "s#^    sha512:.*#    sha512: $CHECKSUM#" "/home/runner/work/sentry-develop/sentry-develop/release-signed-sentry-client-desktop-windows-latest/latest.yml"
 
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            release-sentry-client-desktop-windows-latest/latest.yml
-            release-sentry-client-desktop-windows-latest/sentry-client-windows.exe.blockmap
-            signed_builds/sentry-client-windows.exe
+            release-signed-sentry-client-desktop-windows-latest/latest.yml
+            release-signed-sentry-client-desktop-windows-latest/sentry-client-windows.exe.blockmap
+            release-signed-sentry-client-desktop-windows-latest/signed_builds/sentry-client-windows.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
