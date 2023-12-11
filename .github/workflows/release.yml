@@ -113,7 +113,7 @@ jobs:
 
       - name: Generate checksum
         run: |
-          CHECKSUM=$(shasum -a 512 release-signed-desktop-windows-latest/signed-builds/sentry-client-windows.exe | cut -f1 -d\\ | xxd -r -p | base64)
+          CHECKSUM=$(sha512sum release-signed-desktop-windows-latest/signed-builds/sentry-client-windows.exe | cut -f1 -d\ | xxd -r -p | base64)
           CHECKSUM=$(echo "$CHECKSUM" | tr -d '\r\n')
           echo "SHA512 Checksum: $CHECKSUM"
           cat release-signed-desktop-windows-latest/latest.yml
