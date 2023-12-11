@@ -68,7 +68,7 @@ jobs:
 
   checksum-and-release:
     needs: build
-    runs-on: mac-latest
+    runs-on: macos-latest
 
     steps:
       - name: Download artifacts
