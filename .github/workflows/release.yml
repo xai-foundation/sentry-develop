@@ -61,7 +61,7 @@ jobs:
           password: ${{ secrets.SSL_PASSWORD }}
           totp_secret: ${{ secrets.SSL_TOTP_SECRET }}
           file_path: release-windows-latest/sentry-client-windows.exe
-          output_path: signed-builds
+          output_path: release-windows-latest/signed-builds
       
       - name: Upload signed artifacts
         uses: actions/upload-artifact@v2
