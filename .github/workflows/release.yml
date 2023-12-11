@@ -40,7 +40,7 @@ jobs:
 
   sign-and-release:
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
       - name: Download artifacts
@@ -62,12 +62,12 @@ jobs:
 
       - name: Generate checksum
         run: |
-          CHECKSUM=$(sha512sum release-sentry-client-desktop-windows-latest/signed_builds/sentry-client-windows.exe | cut -f1 -d\ | xxd -r -p | base64)
+          CHECKSUM=$(shasum -a 512 release-sentry-client-desktop-windows-latest/signed_builds/sentry-client-windows.exe | cut -f1 -d\\ | xxd -r -p | base64)
           CHECKSUM=$(echo "$CHECKSUM" | tr -d '\r\n')
           echo "SHA512 Checksum: $CHECKSUM"
           cat /home/runner/work/sentry-develop/sentry-develop/release-sentry-client-desktop-windows-latest/latest.yml
-          sed -i '' -e "s#^sha512:.*#sha512: \"$CHECKSUM\"#" "/home/runner/work/sentry-develop/sentry-develop/release-sentry-client-desktop-windows-latest/latest.yml"
-          sed -i '' -e "s#^    sha512:.*#    sha512: \"$CHECKSUM\"#" "/home/runner/work/sentry-develop/sentry-develop/release-sentry-client-desktop-windows-latest/latest.yml"
+          sed -i '' -e "s#^sha512:.*#sha512: $CHECKSUM#" "/home/runner/work/sentry-develop/sentry-develop/release-sentry-client-desktop-windows-latest/latest.yml"
+          sed -i '' -e "s#^    sha512:.*#    sha512: $CHECKSUM#" "/home/runner/work/sentry-develop/sentry-develop/release-sentry-client-desktop-windows-latest/latest.yml"
 
       - name: Release
         uses: softprops/action-gh-release@v1
